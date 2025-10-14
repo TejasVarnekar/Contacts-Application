@@ -1,0 +1,131 @@
+/* General Body */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    padding: 20px;
+    color: #2c3e50;
+    background-color: #ecf0f1;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #bdc3c7;
+}
+
+/* Search bar */
+form input[type="text"] {
+    padding: 10px;
+    width: 250px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+/* Add New Contact link */
+a.add-contact {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #2ecc71;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+a.add-contact:hover {
+    background-color: #27ae60;
+}
+
+/* Table styling */
+table {
+    width: 80%;
+    margin: 0 auto 50px auto;
+    border-collapse: collapse;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #dcdde1;
+}
+
+/* Edit/Delete links */
+a.edit, a.delete {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a.edit {
+    background-color: #f39c12;
+}
+
+a.edit:hover {
+    background-color: #e67e22;
+}
+
+a.delete {
+    background-color: #e74c3c;
+}
+
+a.delete:hover {
+    background-color: #c0392b;
+}
+
+/* Forms */
+form {
+    width: 350px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+form input[type="text"], form input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    width: 100%;
+}
