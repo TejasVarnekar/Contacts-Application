@@ -1,52 +1,36 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
+# Initialize Flask app
 app = Flask(__name__)
-app.secret_key = "your_secret_key_here"  # Needed for flash messages
-
-# Database configuration (SQLite)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contacts.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'my_secret_key_123'  # Needed for flash messages
 db = SQLAlchemy(app)
 
-# Database model
+# Define Contact table
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(10), nullable=False)
+    full_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone_number = db.Column(db.String(10), nullable=False)
 
-    def __repr__(self):
-        return f"<Contact {self.name}>"
-
-# Create database tables
-with app.app_context():
-    db.create_all()
-
-# Index route: list, search, and sort contacts
+# Home page: list, search, sort
 @app.route('/', methods=['GET', 'POST'])
-def index():
-    search_query = ""
-    sort_option = request.args.get('sort')
+def home():
+    search_query = request.form.get('search') if request.method == 'POST' else ''
+    sort_option = request.args.get('sort', 'name_asc')
 
-    if request.method == 'POST':
-        search_query = request.form.get('search', '')
-
-    # Base query
-    contacts_query = Contact.query
-
-    # Search filter
+    query = Contact.query
     if search_query:
-        contacts_query = contacts_query.filter(Contact.name.contains(search_query))
-
-    # Sorting
+        query = query.filter(Contact.full_name.contains(search_query))
+    
     if sort_option == 'name_asc':
-        contacts_query = contacts_query.order_by(Contact.name.asc())
-    elif sort_option == 'name_desc':
-        contacts_query = contacts_query.order_by(Contact.name.desc())
-
-    contacts = contacts_query.all()
-    return render_template('index.html', contacts=contacts)
+        query = query.order_by(Contact.full_name.asc())
+    else:
+        query = query.order_by(Contact.full_name.desc())
+    
+    my_contacts = query.all()
+    return render_template('index.html', contacts=my_contacts)
 
 # Add new contact
 @app.route('/add_contact', methods=['POST'])
@@ -55,17 +39,26 @@ def add_contact():
     email = request.form.get('email')
     phone = request.form.get('phone')
 
+    # Validate phone number
     if not (phone.isdigit() and len(phone) == 10):
-        flash("Phone number must be exactly 10 digits!", "warning")
-        return redirect(url_for('index'))
+        flash("Phone number must be 10 digits exactly!", "warning")
+        return redirect(url_for('home'))
 
-    new_contact = Contact(name=name, email=email, phone=phone)
-    db.session.add(new_contact)
+    contact_entry = Contact(full_name=name, email=email, phone_number=phone)
+    db.session.add(contact_entry)
     db.session.commit()
-    flash(f"Contact {name} added successfully!", "success")
-    return redirect(url_for('index'))
+    flash(f"{name} has been added to your contacts!", "success")
+    return redirect(url_for('home'))
 
-# Run the app
+# Optional: Delete contact (bonus feature)
+@app.route('/delete_contact/<int:id>')
+def delete_contact(id):
+    contact = Contact.query.get_or_404(id)
+    db.session.delete(contact)
+    db.session.commit()
+    flash(f"{contact.full_name} has been removed from contacts.", "info")
+    return redirect(url_for('home'))
+
 if __name__ == '__main__':
     app.run(debug=True)
 
